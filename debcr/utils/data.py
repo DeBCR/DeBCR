@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import glob
 import random
 from natsort import natsorted
-from util.utils import *
+from debcr.utils.utils import *
 
 def data_prep(BATCH= 64, path='./xxx/'):
 

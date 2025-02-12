@@ -1,7 +1,7 @@
 import random
 import time
 import tensorflow as tf
-from util.utils import *  #  multi_input, loss_function_mimo, metrics_func_mimo
+from debcr.utils import utils  #  multi_input, loss_function_mimo, metrics_func_mimo
 
 def train_model(config, model, multi_input, loss_function_mimo, metrics_func_mimo,  train_img_datagen,  val_img_datagen, visual=True):
     

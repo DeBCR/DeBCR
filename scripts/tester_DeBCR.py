@@ -7,11 +7,11 @@ import sys
 import matplotlib.pyplot as plt
 from natsort import natsorted
 
-from util.utils import *
-from models.DeBCR import *
-from util.metrics import *
-from util.data import *
-from util.whole_img_tester import *
+from debcr.utils import utils
+from debcr.model import DeBCR
+from debcr.utils import metrics
+from debcr.utils import data
+from debcr.utils import whole_img_tester
 
 # argparse formaters for argument help:
 # - argparse.ArgumentDefaultsHelpFormatter - to show default value

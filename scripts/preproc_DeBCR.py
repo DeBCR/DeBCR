@@ -9,7 +9,7 @@ from natsort import natsorted
 from skimage.io import imread as skimage_imread
 import matplotlib.pyplot as plt
 
-from util.utils import rescale#, subShow 
+from debcr.utils.utils import rescale#, subShow 
 
 # argparse formaters for argument help:
 # - argparse.ArgumentDefaultsHelpFormatter - to show default value

@@ -5,8 +5,8 @@ from tensorflow.keras.layers import Input, Dense, Conv2D, AveragePooling2D, Resh
 from tensorflow.keras.layers import *
 #from keras.layers.local import LocallyConnected2D
 from tensorflow.keras.models import Model
-from util.loss_func import *
-from util.metrics import *
+from debcr.model.loss_func import *
+from debcr.utils.metrics import *
 
 def rdb_block(x_in, filters, k_size, strides, rdb_depth):
     x = x_in
