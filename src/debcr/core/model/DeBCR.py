@@ -5,8 +5,10 @@ from tensorflow.keras.layers import Input, Dense, Conv2D, AveragePooling2D, Resh
 from tensorflow.keras.layers import *
 #from keras.layers.local import LocallyConnected2D
 from tensorflow.keras.models import Model
-from debcr.model.loss_func import *
-from debcr.utils.metrics import *
+
+from debcr.core.model.loss import loss_function_mimo
+from debcr.core.model.metrics import metrics_func_mimo
+    
 
 def rdb_block(x_in, filters, k_size, strides, rdb_depth):
     x = x_in
@@ -193,18 +195,6 @@ def inverse_process(xi, alpha1, alpha2, Ncnn1, Ncnn2, w1, name, rdb_depth):
         
     return xi
 
-class Fusion(tf.keras.Model):
-    def __init__(self, in_channel, out_channel):
-        super(Fusion, self).__init__()
-        self.conv = tf.keras.Sequential([
-            Conv2D(out_channel, kernel_size=(1, 1), strides=(1, 1), activation='relu', padding='valid'),
-            Conv2D(out_channel, kernel_size=(3, 3), strides=(1, 1), activation=None, padding='same')
-        ])
-
-    def call(self, x1, x2):
-        x = Concatenate(axis=-1)([x1, x2])
-        return self.conv(x)
-
 def inverse_RDN_mimo(input_shape, alpha1, alpha2, w1, w2, Ncnn1, Ncnn2, RDN=3):
     rdb_depth = RDN
     # Input layers
@@ -240,24 +230,24 @@ def inverse_RDN_mimo(input_shape, alpha1, alpha2, w1, w2, Ncnn1, Ncnn2, RDN=3):
     
     return model
 
-def model_DeBCR(IMG_SHAPE=(128, 128, 1)):
+def build_DeBCR(input_shape=(128, 128, 1)):
     
     # Create the full model
-    input_shape = IMG_SHAPE
     x0 = Input(shape=input_shape, name='x0_input')
     x2 = Input(shape=(input_shape[0] // 2, input_shape[1] // 2, input_shape[2]), name='x2_input')
     x4 = Input(shape=(input_shape[0] // 4, input_shape[1] // 4, input_shape[2]), name='x4_input')
 
     # initialize the model
-    forward_model_RDN = BCR_RDN_mimo(input_shape=(128, 128, 1), alpha=32, p=0.2, nb=3, K=12, L=12, L0=12, RDN=7) 
-    inverse_model_RDN = inverse_RDN_mimo(input_shape=(128, 128, 1), alpha1=32, alpha2=4, w1=5, w2=9, Ncnn1=6, Ncnn2=5, RDN=7)
+    forward_model_RDN = BCR_RDN_mimo(input_shape=input_shape, alpha=32, p=0.2, nb=3, K=12, L=12, L0=12, RDN=7) 
+    inverse_model_RDN = inverse_RDN_mimo(input_shape=input_shape, alpha1=32, alpha2=4, w1=5, w2=9, Ncnn1=6, Ncnn2=5, RDN=7)
 
     [y0, y2, y4] = forward_model_RDN([x0, x2, x4])
     [z0, z2, z4] = inverse_model_RDN([y0, y2, y4])
 
     model = Model(inputs=[x0, x2, x4], outputs=[z0, z2, z4])
-    model.compile(optimizer='adam', loss=loss_function_mimo, metrics=[metrics_func_mimo]) 
-
+    
+    model.compile(optimizer='adam', loss=loss_function_mimo, metrics=[metrics_func_mimo])
+    
     # print(model.input_shape, model.output_shape) # [(None, 128, 128, 1), (None, 64, 64, 1), (None, 32, 32, 1)] 
     # print(model.summary())
     
