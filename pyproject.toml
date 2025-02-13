@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "debcr"
+version = "0.1.0"
+description = "Deep learning based denoising/deblurring/deconvolution for light microscopy data."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+keywords = [
+    "image processing", "deep learning",
+    "BCR", "waveletes", "BCR-Net", "m-rBCR", "s-rBCR",
+    "denoising", "deblurring", "deconvolution",
+    "confocal microscopy", "widefield microscopy",
+    "fluorescent microscopy", "light microscopy"
+]
+authors = [
+{ name="Artsemi Yushkevich" },
+{ name="Rui Li" },
+{ name="Mikhail Kudryashev" },
+{ name="Artur Yakimovich" }
+]
+maintainers = [{ name = "Artsemi Yushkevich" }]
+urls = { homepage = "https://github.com/DeBCR/DeBCR" }
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: GPU :: NVIDIA CUDA :: 11.7",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Image Processing"
+]
+
+dependencies = [
+    "tensorflow-gpu==2.11",
+    "numpy==1.23.5",
+    "natsort",
+    "matplotlib",
+    "scikit-image",
+    "PyYAML"
+] # Base dependencies loaded from requirements.txt in [tool.setuptools.dynamic]
+
+[project.optional-dependencies]
+dev = [
+    "pip",
+    "setuptools"
+]
+cuda11 = [
+    "tensorflow-gpu==2.11",
+    "numpy==1.23.5",
+    "natsort",
+    "matplotlib",
+    "scikit-image",
+    "PyYAML",
+    "nvidia-pyindex",
+    "nvidia-cudnn-cu115"
+] # Base dependencies loaded from requirements.txt in [tool.setuptools.dynamic]
+
+[tool.setuptools]
+packages = { find = { where = ["src"] } }
