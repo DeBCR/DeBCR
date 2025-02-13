@@ -61,20 +61,38 @@ Installation steps are:
     ```bash
     cd /path/to/DeBCR
     ```
-2. **Prepare environment with CUDA.**
+2. **Prepare (auto) environment with CUDA (auto-install).**
+    * auto-create package environment with CUDA dependencies
+    ```bash
+    micromamba env create -f environment_cuda11.yml
+    ```
+    * activate package environment
+    ```bash
+    micromamba activate debcr-cu11-env
+    ```
+3. **Install (locally) `DeBCR` package and its basic and CUDA-based dependencies.**
+    ```bash
+    pip install .[cuda11]
+    ```
+
+If you need to have more control over CUDA dependencies installation, instead of step 2 and 3 above do:
+1. **Prepare (manually) environment with CUDA.**
     * create and activate package environment
     ```bash
     micromamba env create -n debcr-env -c conda-forge python=3.9 pip
     micromamba activate debcr-env
     ```
-    * install CUDA dependencies - please use the following setup for CUDA-11.5/7
+    * install non-pip CUDA dependencies, in the auto-setup above we use:
     ```bash
     micromamba install cudatoolkit=11.7 cudnn=8.4
-    pip install -r requirements_cuda11.txt
     ```
-3. **Install `DeBCR` dependencies.**
+    * install pip-based CUDA dependencies, in the auto-setup above we use:
     ```bash
-    pip install -r requirements.txt
+    pip install nvidia-pyindex nvidia-cudnn-cu115
+    ```
+2. **Install (locally) `DeBCR` package and its basic dependencies only.**
+    ```bash
+    pip install .
     ```
 
 For GPU devices recognition (CUDA-11.5/7 setup above) during local DeBCR usage, please make the following export:
@@ -94,7 +112,7 @@ for a single GPU you should see something like:
 [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
 ```
 
-Howeevr, if the output list is empty, please check that you have:
+However, if the output list is empty, please check that you have:
 * available and visible GPU
 * installed and sourced **CUDA Driver** and **CUDA Tollkit** for `CUDA-11.5/7`
 * installed CUDA dependencies for python (see instructions above)

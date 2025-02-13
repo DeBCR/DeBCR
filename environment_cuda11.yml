@@ -1,0 +1,8 @@
+name: debcr-cu11-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - cudatoolkit=11.7
+  - cudnn=8.4
+  - pip
