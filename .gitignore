@@ -9,9 +9,13 @@
 # *.hdf5
 checkpoint/
 
-./data/*
-
+# data
+*.tif
 *.npz
+
+# packaging
+*.egg
+*.egg-info
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
