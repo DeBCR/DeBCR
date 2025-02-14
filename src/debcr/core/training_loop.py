@@ -1,8 +1,10 @@
 import random
 import time
+
 import tensorflow as tf
 
-from debcr.core.utils import multi_input, subShow3
+from debcr.core.show_utils import subShow3
+from debcr.core.model.utils import multi_input
 from debcr.core.model.loss import loss_function_mimo
 from debcr.core.model.metrics import metrics_func_mimo
 

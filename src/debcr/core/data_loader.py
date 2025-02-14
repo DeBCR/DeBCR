@@ -4,8 +4,9 @@ import numpy as np
 from natsort import natsorted
 
 # load dataset to databank
-def load_dataset(data_path, data_list, batch_size=16, add_noise=False): #config.data
-    datagen_obj = DataGenerator(data_dir, data_list, batch_size, add_noise)
+def load_dataset(data_path, batch_size=16, add_noise=False): #config.data
+    data_list = [data_path] if os.path.isfile(data_path) else natsorted(os.listdir(data_path))
+    datagen_obj = DataGenerator(data_path, data_list, batch_size, add_noise)
     datagen_img = datagen_obj.imageLoader()
     return datagen_img
 

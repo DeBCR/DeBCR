@@ -6,7 +6,7 @@ try:
 except ImportError:
     from yaml import Loader
     
-def load_yaml_config(config_path):
+def load_config(config_path):
     """Load training configuration from a YAML file."""
     with open(config_path, 'r') as stream:
         config_dict = yaml.load(stream, Loader)
