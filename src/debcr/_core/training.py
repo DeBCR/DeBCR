@@ -3,26 +3,26 @@ import time
 
 import tensorflow as tf
 
-from debcr.core.show_utils import subShow3
-from debcr.core.model.utils import multi_input
-from debcr.core.model.loss import loss_function_mimo
-from debcr.core.model.metrics import metrics_func_mimo
+from .show_utils import subShow3
+from .model.utils import multi_input
+from .model.loss import loss_function_mimo
+from .model.metrics import metrics_func_mimo
+from .model.utils import setup_ckpt_manager
 
 def train_model(model, train_img_datagen, val_img_datagen, train_config): #config.training
     
     best_val_loss = float('inf')
     wait = 0
-
-    model.compile(optimizer=train_config['opti'], loss=loss_function_mimo, metrics=[metrics_func_mimo])
+    
+    checkpoint, checkpoint_manager = setup_ckpt_manager(model, train_config['ckpt_path']) # setup checkpoint manager
+    
     optimizer = tf.keras.optimizers.Adam(learning_rate=train_config['lr'])
-    checkpoint = tf.train.Checkpoint(model=model)
-    checkpoint_manager = tf.train.CheckpointManager(checkpoint, train_config['ckpt_path'], max_to_keep=5)
-
+    
     start_time = time.time()
 
     for step in range(train_config['NUM_STEPS']):
         w_train, o_train = train_img_datagen.__next__()
-        w_train_list, o_train_list = multi_input(w_train, o_train)
+        w_train_list, o_train_list = multi_input(w_train), multi_input(o_train)
 
         with tf.GradientTape() as tape:
             # Forward pass
@@ -45,7 +45,7 @@ def train_model(model, train_img_datagen, val_img_datagen, train_config): #confi
 
         if step % train_config['val_freq'] == 0:
             w_eval, o_eval = val_img_datagen.__next__()
-            w_eval_list, o_eval_list = multi_input(w_eval, o_eval)
+            w_eval_list, o_eval_list = multi_input(w_eval), multi_input(o_eval)
             val_predictions = model(w_eval_list)
 
             # Calculate the validation loss manually

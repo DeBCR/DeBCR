@@ -1,11 +1,17 @@
 import yaml
-#import argparse -> dict_to_namespace()
 
+def load_config(config_path="config/default_config.yaml"):
+    """Loads YAML configuraiton file."""
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+    return config
+
+'''
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-    
+   
 def load_config(config_path):
     """Load training configuration from a YAML file."""
     with open(config_path, 'r') as stream:
@@ -26,8 +32,11 @@ class DictConfig(object):
 
     def __repr__(self):
         return self.__str__()
+'''
 
 '''
+import argparse -> dict_to_namespace()
+
 def dict_to_namespace(config):
     """
     Converts a dictionary to a namespace object.

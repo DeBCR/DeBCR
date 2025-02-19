@@ -4,11 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense, Conv2D, AveragePooling2D, Reshape, Concatenate
 from tensorflow.keras.layers import *
 #from keras.layers.local import LocallyConnected2D
-from tensorflow.keras.models import Model
-
-from debcr.core.model.loss import loss_function_mimo
-from debcr.core.model.metrics import metrics_func_mimo
-    
+from tensorflow.keras.models import Model    
 
 def rdb_block(x_in, filters, k_size, strides, rdb_depth):
     x = x_in
@@ -230,7 +226,7 @@ def inverse_RDN_mimo(input_shape, alpha1, alpha2, w1, w2, Ncnn1, Ncnn2, RDN=3):
     
     return model
 
-def build_DeBCR(input_shape=(128, 128, 1)):
+def m_rBCR(input_shape=(128, 128, 1)):
     
     # Create the full model
     x0 = Input(shape=input_shape, name='x0_input')
@@ -245,8 +241,6 @@ def build_DeBCR(input_shape=(128, 128, 1)):
     [z0, z2, z4] = inverse_model_RDN([y0, y2, y4])
 
     model = Model(inputs=[x0, x2, x4], outputs=[z0, z2, z4])
-    
-    model.compile(optimizer='adam', loss=loss_function_mimo, metrics=[metrics_func_mimo])
     
     # print(model.input_shape, model.output_shape) # [(None, 128, 128, 1), (None, 64, 64, 1), (None, 32, 32, 1)] 
     # print(model.summary())
