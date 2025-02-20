@@ -40,29 +40,27 @@ classifiers = [
 ]
 
 dependencies = [
-    "tensorflow-gpu==2.11",
     "numpy==1.23.5",
     "natsort",
     "matplotlib",
     "scikit-image",
+    "tifffile",
     "PyYAML"
-] # Base dependencies loaded from requirements.txt in [tool.setuptools.dynamic]
+]
 
 [project.optional-dependencies]
 dev = [
     "pip",
     "setuptools"
 ]
-cuda11 = [
+tf-cpu = [
+    "tensorflow-cpu==2.11"
+]
+tf-gpu-cu117 = [
     "tensorflow-gpu==2.11",
-    "numpy==1.23.5",
-    "natsort",
-    "matplotlib",
-    "scikit-image",
-    "PyYAML",
     "nvidia-pyindex",
     "nvidia-cudnn-cu115"
-] # Base dependencies loaded from requirements.txt in [tool.setuptools.dynamic]
+]
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
