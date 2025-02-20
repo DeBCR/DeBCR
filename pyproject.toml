@@ -66,4 +66,4 @@ tf-gpu-cu117 = [
 packages = { find = { where = ["src"] } }
 
 [tool.setuptools.package-data]
-"debcr" = ["weights/*"] 
+"debcr" = ["weights/*/*"] 
