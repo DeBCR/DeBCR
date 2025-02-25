@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "debcr"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Deep learning based denoising/deblurring/deconvolution for light microscopy data."
 readme = "README.md"
 license = { text = "MIT" }
@@ -64,3 +64,6 @@ tf-gpu-cu117 = [
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
+
+[tool.setuptools.dynamic]
+version = {attr = "debcr.__init__.__version__"}
