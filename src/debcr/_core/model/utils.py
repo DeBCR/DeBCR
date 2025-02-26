@@ -27,7 +27,7 @@ def restore_ckpt(model, ckpt_dirpath, ckpt_name):
     ckpt_path = get_ckpt_path(ckpt_dirpath, ckpt_name)
     status = checkpoint.restore(ckpt_path)#.expect_partial()
     #status.assert_consumed()
-    return model
+    return model, ckpt_path
 
 def get_ckpt_path(ckpt_dirpath: str, ckpt_name: str):
 
