@@ -1,3 +1,0 @@
-# libraries for GPU accessibility (CUDA-11.5/11.7) 
-nvidia-pyindex
-nvidia-cudnn-cu115

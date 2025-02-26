@@ -1,0 +1,8 @@
+NUM_STEPS: 2000
+best_val_loss: 'inf'
+patience: 10 
+opti: 'adam'
+lr: 0.001
+ckpt_path: './checkpoint/LM_2D_denoising/'
+save_freq: 50
+val_freq: 100
