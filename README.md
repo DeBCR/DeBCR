@@ -57,7 +57,7 @@ To avoid dependency problems, do not install both CPU and GPU versions in the sa
    ```
 1. Install CPU version of `debcr` package via pip by
     ```bash
-    pip install debcr[tf-cpu] @ git+https://github.com/DeBCR/DeBCR
+    pip install debcr[tf-cpu]@git+https://github.com/DeBCR/DeBCR
     ```
 
 ### GPU installation
@@ -75,7 +75,7 @@ To install/use GPU version you need to have a GPU (>=16GB VRAM) with `CUDA` inst
     ```
 2. Install GPU version of `debcr` package via pip by
     ```bash
-    pip install debcr[tf-gpu-cu117] @ git+https://github.com/DeBCR/DeBCR
+    pip install debcr[tf-gpu-cu117]@git+https://github.com/DeBCR/DeBCR
     ```
 
 ### GPU check and troubleshooting
@@ -83,7 +83,7 @@ To install/use GPU version you need to have a GPU (>=16GB VRAM) with `CUDA` inst
 After installation we recommend to check that TensorFlow library, needed for our model, recognizes GPUs:
 ```bash
 python
->>> import tenforflow as tf
+>>> import tensorflow as tf
 >>> tf.config.list_physical_devices('GPU')
 ```
 for a single GPU you should see something like:
@@ -121,7 +121,11 @@ To showcase how to use `debcr` as a python library (API) interactively in `Jupyt
    | [predict_api_samples.ipynb](notebooks/predict_api_samples.ipynb)  | predict on prepared data | CPU/GPU, [sample data](#samples) |
    | [predict_api_custom.ipynb](notebooks/predict_api_custom.ipynb)    | prepare raw data and predict | CPU/GPU |
 
-You can either download them separately or you may clone the whole **DeBCR** repository locally by:
+You can either download them separately, for example:
+```bash
+wget https://github.com/DeBCR/DeBCR/raw/refs/heads/main/notebooks/predict_api_samples.ipynb
+```
+or you may clone the whole **DeBCR** repository locally by:
 ```bash
 git clone https://github.com/DeBCR/DeBCR
 ```
