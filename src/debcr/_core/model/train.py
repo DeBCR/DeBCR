@@ -3,11 +3,11 @@ import time
 
 import tensorflow as tf
 
-from .show_utils import subShow3
-from .model.utils import multi_input
-from .model.loss import loss_function_mimo
-from .model.metrics import metrics_func_mimo
-from .model.utils import setup_ckpt_manager
+from .utils import multi_input
+from .utils import setup_ckpt_manager
+from .loss import loss_function_mimo
+from .metrics import metrics_func_mimo
+#from .show_utils import subShow3
 
 def train_model(model, train_img_datagen, val_img_datagen, train_config): #config.training
     
@@ -61,10 +61,10 @@ def train_model(model, train_img_datagen, val_img_datagen, train_config): #confi
             else:
                 wait += 1
 
-            if train_config['visual']:
-                s_NUM = random.randint(0, predictions[0].shape[0] - 1)
-                print('Objects:', s_NUM)
-                subShow3(w_train[s_NUM], predictions[0][s_NUM], o_train[s_NUM])
+            #if train_config['visual']:
+            #    s_NUM = random.randint(0, predictions[0].shape[0] - 1)
+            #    print('Objects:', s_NUM)
+            #    subShow3(w_train[s_NUM], predictions[0][s_NUM], o_train[s_NUM])
             
             if wait >= train_config['patience']:
                 print("Early stopping due to no improvement in validation loss.", step)
