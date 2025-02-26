@@ -1,5 +1,5 @@
 import numpy as np
-from .model.utils import multi_input
+from .utils import multi_input
 
 def predict_with_model(eval_model, input_data: np.ndarray) -> np.ndarray:
 
