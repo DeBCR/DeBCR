@@ -16,7 +16,7 @@ For the installation/usage questions please write to the [Issue Tracker](https:/
 - [About](#about) - key points of the network structure and results examples
 - [Installation](#installation) - instructions on `debcr` installation for local usage
 - [Usage](#usage) - local usage scenarious and respective tutorials 
-- [Samples](#samples) - link to example data and weigths
+- [Samples](#samples) - link to example data and model weigths
 
 ## About
 
@@ -37,16 +37,16 @@ Li R., Yushkevich A., Chu X., Kudryashev M., Yakimovich A. Denoising, Deblurring
 ## Installation
 
 `debcr` has two main versions:
-- [GPU version]((#gpu-installation)) (**recommended**) - more dependencies, full version (predictions+training);
+- [GPU version](#gpu-installation) (**recommended**) - more dependencies, full version (predictions+training);
 - [CPU version](#cpu-installation) (*lightweight*) - easy install, limited scope (predictions only).
 
 To install `debcr` and its CPU/GPU dependencies you would need [pip](https://pypi.org/project/pip/).
 
-For GPU dependencies you would also need a python package environment manager, like `(micro)mamba` ([mamba.readthedocs.io](https://mamba.readthedocs.io/)) or 'conda-forge' ([conda-forge.org](https://conda-forge.org/)). We will use `micromamba` as an example.
+For GPU dependencies you would also need a python package environment manager, like `(micro)mamba` ([mamba.readthedocs.io](https://mamba.readthedocs.io/)) or `conda-forge` ([conda-forge.org](https://conda-forge.org/)). We will use `micromamba` as an example.
 
 Although not required, a package manager to create environment is also recommended for the CPU version.
 
-To avoid dependency problems, do not install both CPU and GPU versions in the same environment.
+To avoid dependency problems, do not install both CPU and GPU versions in the same environment!
 
 ### CPU installation
 
@@ -138,7 +138,8 @@ jupyter-lab
 Some of the notebooks require:
 - *sample data* - examples of pre-processed training/validation/testing data;
 - *sample weights* - examples of the trained model weights, respective to *sample data*;
-which are described [in the section below](#samples).
+
+which are described in the next section.
 
 ## Samples
 
