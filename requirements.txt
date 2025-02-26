@@ -1,6 +1,0 @@
-tensorflow-gpu==2.11
-numpy==1.23.5
-natsort
-matplotlib
-scikit-image
-PyYAML
