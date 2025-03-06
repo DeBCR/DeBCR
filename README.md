@@ -120,6 +120,7 @@ To showcase how to use `debcr` as a python library (API) interactively in `Jupyt
    | :---------------------------------------------------------------- | :------ | :------- | 
    | [predict_api_samples.ipynb](notebooks/predict_api_samples.ipynb)  | predict on prepared data | CPU/GPU, [sample data](#samples) |
    | [predict_api_custom.ipynb](notebooks/predict_api_custom.ipynb)    | prepare raw data and predict | CPU/GPU |
+   | [train_api_samples.ipynb](notebooks/train_api_samples.ipynb)      | train on prepared data | GPU, [sample data](#samples) |
 
 You can either download them separately, for example:
 ```bash
