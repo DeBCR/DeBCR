@@ -1,4 +1,4 @@
-from .loaders import get_loader, get_format
+from .file_loaders import get_loader, get_format
 from .process import patchify, rescale_min_max
 
 __all__ = [
