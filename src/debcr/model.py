@@ -1,7 +1,6 @@
 import os
 import glob
 import numpy as np
-from ._core import data
 from ._core import model
 
 def init(weights_path: str = None, ckpt_name: str = "ckpt-*"):
@@ -22,3 +21,10 @@ def init(weights_path: str = None, ckpt_name: str = "ckpt-*"):
 def predict(eval_model, input_data: np.ndarray) -> np.ndarray:
     
     return model.predict_with_model(eval_model, input_data)
+
+def train(train_data, val_data, config: dict, init_model = None):
+    
+    if init_model is None:
+        init_model = init()
+    
+    return model.train_model(init_model, train_data, val_data, config)
