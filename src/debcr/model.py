@@ -18,9 +18,10 @@ def init(weights_path: str = None, ckpt_name: str = "ckpt-*"):
     else:
         raise ValueError(f'Non-existing weights path: {weights_path}')
 
-def predict(eval_model, input_data: np.ndarray) -> np.ndarray:
+def predict(eval_model, input_data: np.ndarray, batch_size: int = 32) -> np.ndarray:
     
-    return model.predict_with_model(eval_model, input_data)
+    print(f'Batch size: {batch_size}')
+    return model.predict_with_model(eval_model, input_data, batch_size)
 
 def train(train_data, val_data, config: dict, init_model = None):
     
