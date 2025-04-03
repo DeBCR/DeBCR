@@ -151,11 +151,11 @@ def BCR_RDN_mimo(input_shape, alpha, p, nb, K, L, L0, RDN=3):
 
     # Fusion of y
     aff_layer = Fusion(in_channel=64, out_channel=32)
-    y2_resized = tf.image.resize(y_2, size=(128, 128), method=tf.image.ResizeMethod.BILINEAR)
-    y4_resized = tf.image.resize(y_4, size=(128, 128), method=tf.image.ResizeMethod.BILINEAR)
+    y2_resized = tf.image.resize(y_2, size=(input_shape[0], input_shape[1]), method=tf.image.ResizeMethod.BILINEAR)
+    y4_resized = tf.image.resize(y_4, size=(input_shape[0], input_shape[1]), method=tf.image.ResizeMethod.BILINEAR)
     y42_fusion = aff_layer(y_0, y2_resized)
     y20_fusion = aff_layer(y2_resized, y4_resized)
-    y20_fusion = tf.image.resize(y20_fusion, size=(64, 64), method=tf.image.ResizeMethod.BILINEAR)
+    y20_fusion = tf.image.resize(y20_fusion, size=(input_shape[0] // 2, input_shape[1] // 2), method=tf.image.ResizeMethod.BILINEAR)
     
     # Output layers - x_4
     y_4 = output_layer(y_4)
@@ -204,14 +204,14 @@ def inverse_RDN_mimo(input_shape, alpha1, alpha2, w1, w2, Ncnn1, Ncnn2, RDN=3):
     xi_4 = inverse_process(x4_inputs, alpha1, alpha2, Ncnn1, Ncnn2, w1, 'x4', rdb_depth)
     
     # Fusion of xi_4 and x2_inputs
-    xi_4_resized = tf.image.resize(xi_4, size=(64, 64), method=tf.image.ResizeMethod.BILINEAR)
+    xi_4_resized = tf.image.resize(xi_4, size=(input_shape[0] // 2, input_shape[1] // 2), method=tf.image.ResizeMethod.BILINEAR)
     x42_fusion = aff_layer(x2_inputs, xi_4_resized)
     
     # Inverse the process for x2
     xi_2 = inverse_process(x42_fusion, alpha1, alpha2, Ncnn1, Ncnn2, w1, 'x2', rdb_depth)
     
     # Fusion of xi_2 and x0_inputs
-    xi_2_resized = tf.image.resize(xi_2, size=(128, 128), method=tf.image.ResizeMethod.BILINEAR)
+    xi_2_resized = tf.image.resize(xi_2, size=(input_shape[0], input_shape[1]), method=tf.image.ResizeMethod.BILINEAR)
     x20_fusion = aff_layer(x0_inputs, xi_2_resized)
     
     # Inverse the process for x0 with fusion

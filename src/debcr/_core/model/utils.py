@@ -3,12 +3,12 @@ import glob
 import numpy as np
 import tensorflow as tf
 
-def build_and_compile():
+def build_and_compile(input_shape = (128, 128, 1)):
     from .m_rBCR import m_rBCR
     from .loss import loss_function_mimo
     from .metrics import metrics_func_mimo
     
-    model = m_rBCR()
+    model = m_rBCR(input_shape=input_shape)
     model.compile(optimizer='adam', loss=loss_function_mimo, metrics=[metrics_func_mimo]) 
     
     return model

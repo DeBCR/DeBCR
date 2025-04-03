@@ -3,9 +3,9 @@ import glob
 import numpy as np
 from ._core import model
 
-def init(weights_path: str = None, ckpt_name: str = "ckpt-*"):
+def init(weights_path: str = None, input_size: int = 128, ckpt_name: str = "ckpt-*"):
     
-    init_model = model.build_and_compile()
+    init_model = model.build_and_compile(input_shape = (input_size, input_size, 1))
     if weights_path is None:
         print('Initialized model - untrained')
         return init_model
