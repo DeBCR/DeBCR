@@ -7,7 +7,7 @@ name = "debcr"
 dynamic = ["version"]
 description = "Deep learning based denoising/deblurring/deconvolution for light microscopy data."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 requires-python = ">=3.9"
 keywords = [
     "image processing", "deep learning",
@@ -32,9 +32,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Image Processing"
 ]
@@ -53,14 +50,8 @@ dev = [
     "pip",
     "setuptools"
 ]
-tf-cpu = [
-    "tensorflow-cpu==2.11"
-]
-tf-gpu-cu117 = [
-    "tensorflow-gpu==2.11",
-    "nvidia-pyindex",
-    "nvidia-cudnn-cu115"
-]
+tf-cpu = [ "tensorflow-cpu==2.11" ]
+tf-gpu = [ "tensorflow-gpu==2.11" ]
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
