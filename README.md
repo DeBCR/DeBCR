@@ -29,7 +29,7 @@ For a GPU version you need to have access to a GPU device with:
 - a CUDA Toolkit version compatible to your device (recommemded: [CUDA-11.7](https://developer.nvidia.com/cuda-11-7-0-download-archive));
 - a cuDNN version compatible to the CUDA above (recommemded: v8.4.0 for CUDA-11.x from [cuDNN archive](https://developer.nvidia.com/rdp/cudnn-archive)).
 
-For GPU dependencies installation 
+For GPU dependencies installation/configuration please check our tips on [GPU-advice page](docs/GPU-advice.md). 
 
 > **Note**
 > <br/> A proper CUDA and cuDNN installation and configuration might be tricky, especially if you work on an HPC cluster. Thus, try to contact your local system administrator first, before trying to install it yourself. 
@@ -51,29 +51,34 @@ micromamba activate debcr
 
 ### Install DeBCR
 
-Navigate to the desired directory by
+Clone this repository to the desired directory by
 ```bash
-cd /path/for/download
-```
-clone this repository on your system by
-```bash
+cd /path/for/clone
 git clone https://github.com/DeBCR/DeBCR
 ```
-and enter the local repository directory by
+
+Next, enter the cloned `DeBCR` directory by
 ```bash
 cd ./DeBCR
 ```
-
-Next, install one of the `DeBCR` versions as
+and install one of the `DeBCR` versions as
 
 | Target hardware  | Backend         | Command  |
 | :--------------- | :-------------- | :------- | 
-| GPU (**recommended**) | TensorFlow-GPU-2.11 | <pre> pip install .[tf-gpu] </pre> |
-| CPU (*limited*) | TensorFlow-CPU-2.11 | <pre> pip install .[tf-cpu] </pre> |
+| GPU (**recommended**) | TensorFlow-GPU-2.11 | <pre> pip install -e .[tf-gpu] </pre> |
+| CPU (*limited*) | TensorFlow-CPU-2.11 | <pre> pip install -e .[tf-cpu] </pre> |
 
-For a GPU version installation, it is recommended to check if your GPU device is recognised by TensorFlow in your `DeBCR` environment.
+For a GPU version installation, it is recommended to check if your GPU device is recognised by **TensorFlow** using
+```bash
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
 
-This GPU checking procedure as well as some further advices on how to troubleshoot GPU dependencies installation for `DeBCR` are described on the dedicated page ["GPU-troubleshoot"](docs/GPU-troubleshoot.md). 
+which for a single GPU device should produce a similar output as below:
+```
+[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+```
+
+If your GPU device list is empty, please check our tips on [GPU-advice page](docs/GPU-advice.md).
 
 ### Install Jupyter
 

@@ -1,4 +1,4 @@
-# GPU-troubleshoot
+# GPU-advice
 
 This page is contains advices on installation, testing and troubleshooting of GPU dependencies required for GPU-version configuration of `DeBCR`.
 
@@ -11,12 +11,7 @@ This page is contains advices on installation, testing and troubleshooting of GP
 
 ## Check GPU installation
 
-To check that **TensorFlow** library, needed for our model usage, recognizes available GPU device(s):
-1. Activate corresponding `debcr` environment, if you use a Python package manager, for example by
-```bash
-micromamba activate debcr
-```
-2. Check that your GPUs are visible to the **TensorFlow** by
+To check that **TensorFlow** library, needed for our model usage, recognizes available GPU device(s), run
 ```bash
 python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
