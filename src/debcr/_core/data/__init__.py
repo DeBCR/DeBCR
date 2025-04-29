@@ -1,7 +1,7 @@
 from .file_loaders import get_loader, get_format
-from .process import patchify, rescale_min_max
+from .process import crop_patches, stitch_patches, normalize
 
 __all__ = [
     "get_loader", "get_format",
-    "patchify", "rescale_min_max"
+    "crop_patches", "stitch_patches", "normalize"
 ]
