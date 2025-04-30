@@ -4,8 +4,8 @@ from ._core import data as _data
 
 # expose internal functions as API
 from ._core.data import (
-    crop_patches,
-    stitch_patches,
+    crop,
+    stitch,
     normalize,
 )
 

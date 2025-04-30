@@ -1,40 +1,65 @@
 import numpy as np
 
-def crop_patches(data: np.ndarray, patch_size: int = 128) -> np.ndarray:
+def crop(data: np.ndarray, patch_size: int = 128, overlap = (0.5, 0.5)) -> np.ndarray:
 
     nz, sz_x, sz_y = data.shape
-    nx = sz_x // patch_size
-    ny = sz_y // patch_size
+    over_x, over_y = overlap
+    
+    nx = int( (sz_x - patch_size*over_x) // ((1-over_x)*patch_size) )
+    ny = int( (sz_y - patch_size*over_y) // ((1-over_y)*patch_size) )
     
     n_patch = nx * ny * nz
     patches = np.zeros((n_patch, patch_size, patch_size), dtype=data.dtype)
     
-    iz = 0
-    for ix in range(nx):
-        for iy in range(ny):
-            patches[iz*nz:(iz+1)*nz] = data[:, ix*patch_size:(ix+1)*patch_size, iy*patch_size:(iy+1)*patch_size]
-            iz += 1
+    for iz in range(nz):
+        for ix in range(nx):
+            ix_s = int(ix * (1-over_x) * patch_size)
+            for iy in range(ny):    
+                iy_s = int(iy * (1-over_y) * patch_size)
+                patches[iz*(nx*ny) + ix*nx + iy] = data[iz, ix_s:ix_s+patch_size, iy_s:iy_s+patch_size]
+                #patches[iz*nz:(iz+1)*nz] = data[:, ixs:ixs+patch_size, iys:iys+patch_size]
     
-    return patches # np.expand_dims(patches_array, axis=-1)  # Ensure channel dimension
+    return patches, (nx, ny)
 
-def stitch_patches(data: np.ndarray, nx: int, ny: int) -> np.ndarray:
+def stitch(data: np.ndarray, patch_num: (int, int), overlap: (0.5, 0.5), use_cosine=True) -> np.ndarray:
 
     patch_size = data[0].shape[0]
+    nx, ny = patch_num
+    over_x, over_y = overlap
+    
     nz = data.shape[0] // (nx * ny)
+    sz_x = int( nx*patch_size*(1-over_x) + patch_size*over_x )
+    sz_y = int( ny*patch_size*(1-over_y) + patch_size*over_y )
+    asmbl = np.zeros((nz, sz_x, sz_y), dtype=data.dtype)    
+
+    # blend patches to avoid border artifacts
+    # select blending approach: cosine (Hann) window or direct averaging
+    if use_cosine:
+        mask = _cosine_window(patch_size)
+    else:
+        mask = np.ones((patch_size, patch_size), dtype=np.float32)
     
-    asmbl = np.zeros((nz, patch_size*nx, patch_size*ny), dtype=data.dtype)    
-    
-    iz = 0
-    for ix in range(nx):
-        for iy in range(ny):
-            asmbl[:, ix*patch_size:(ix+1)*patch_size, iy*patch_size:(iy+1)*patch_size] = data[iz*nz:(iz+1)*nz]
-            iz += 1
+    for iz in range(nz):
+        asmbl_slice = np.zeros((sz_x, sz_y), dtype=data.dtype)
+        asmbl_weight = np.zeros((sz_x, sz_y), dtype=data.dtype)
+        for ix in range(nx):
+            ix_s = int(ix * (1-over_x) * patch_size)
+            for iy in range(ny):
+                iy_s = int(iy * (1-over_y) * patch_size)
+                asmbl_slice[ix_s:ix_s+patch_size, iy_s:iy_s+patch_size] += data[iz*(nx*ny) + ix*nx + iy] * mask
+                asmbl_weight[ix_s:ix_s+patch_size, iy_s:iy_s+patch_size] += mask
+        asmbl[iz] = asmbl_slice / (asmbl_weight + 1e-8)
     
     return asmbl
 
+def _cosine_window(patch_size: int):
+    window_1d = np.hanning(patch_size) # 1D cosine
+    window_2d = np.outer(window_1d, window_1d) # make 2D window
+    return window_2d
+
 def normalize(data: np.ndarray, pmin=0.1, pmax=99.9, by_perc=True, vmin=None, vmax=None, per_slice=False, eps=1e-16, dtype=np.float32):
         
-    get_minmax_fn = get_minmax_perc if by_perc else get_minmax_val
+    get_minmax_fn = _get_minmax_perc if by_perc else _get_minmax_val
     if by_perc:    
         minmax_args = {'pmin': pmin, 'pmax': pmax}
     else:
@@ -53,28 +78,15 @@ def normalize(data: np.ndarray, pmin=0.1, pmax=99.9, by_perc=True, vmin=None, vm
             data_norm[idx] = np.clip(data_norm[idx], 0, 1)
     return data_norm
 
-def get_minmax_val(data: np.ndarray, vmin, vmax):
+def _get_minmax_val(data: np.ndarray, vmin, vmax):
     dmin = vmin if vmin is not None else data.min()
     dmax = vmax if vmax is not None else data.max()
     return dmin, dmax
     
-def get_minmax_perc(data: np.ndarray, pmin, pmax):
+def _get_minmax_perc(data: np.ndarray, pmin, pmax):
     return np.percentile(data, (pmin, pmax))
 
 '''
-def rescale_min_max(data, MIN=0, MAX=1) -> np.ndarray:
-    # Rescale the whole stack
-    if data[0].max() != 1:
-        data_scale = []
-        for stack in range(data.shape[0]):
-            temp = data[stack, ...]
-            temp_scale = np.interp(temp, (temp.min(), temp.max()), (MIN, MAX))
-            data_scale.append(temp_scale.astype('float64'))
-    else:
-        data_scale = data
-        
-    return np.asarray(data_scale)
-
 def split_train_val(data, train_ratio=0.8, val_ratio=0.1, test_ratio=0.1):
 
     assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6, "Ratios must sum to 1."
