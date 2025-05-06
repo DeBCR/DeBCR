@@ -1,6 +1,6 @@
 import numpy as np
-
-def crop(data: np.ndarray, patch_size: int = 128, overlap = (0.5, 0.5)) -> np.ndarray:
+    
+def crop(data: np.ndarray, patch_size: int = 128, overlap = (0.5, 0.5), dry_run=False) -> np.ndarray:
 
     nz, sz_x, sz_y = data.shape
     over_x, over_y = overlap
@@ -9,6 +9,10 @@ def crop(data: np.ndarray, patch_size: int = 128, overlap = (0.5, 0.5)) -> np.nd
     ny = int( (sz_y - patch_size*over_y) // ((1-over_y)*patch_size) )
     
     n_patch = nx * ny * nz
+    
+    if dry_run:
+        return n_patch, (nx, ny) 
+    
     patches = np.zeros((n_patch, patch_size, patch_size), dtype=data.dtype)
     
     for iz in range(nz):
@@ -19,9 +23,9 @@ def crop(data: np.ndarray, patch_size: int = 128, overlap = (0.5, 0.5)) -> np.nd
                 patches[iz*(nx*ny) + ix*nx + iy] = data[iz, ix_s:ix_s+patch_size, iy_s:iy_s+patch_size]
                 #patches[iz*nz:(iz+1)*nz] = data[:, ixs:ixs+patch_size, iys:iys+patch_size]
     
-    return patches, (nx, ny)
-
-def stitch(data: np.ndarray, patch_num: (int, int), overlap: (0.5, 0.5), use_cosine=True) -> np.ndarray:
+    return patches
+    
+def stitch(data: np.ndarray, patch_num: (int, int), overlap: (0.5, 0.5), use_cosine=True, dry_run=False) -> np.ndarray:
 
     patch_size = data[0].shape[0]
     nx, ny = patch_num
@@ -30,6 +34,10 @@ def stitch(data: np.ndarray, patch_num: (int, int), overlap: (0.5, 0.5), use_cos
     nz = data.shape[0] // (nx * ny)
     sz_x = int( nx*patch_size*(1-over_x) + patch_size*over_x )
     sz_y = int( ny*patch_size*(1-over_y) + patch_size*over_y )
+
+    if dry_run:
+        return nz, (sz_x, sz_y) 
+    
     asmbl = np.zeros((nz, sz_x, sz_y), dtype=data.dtype)    
 
     # blend patches to avoid border artifacts
