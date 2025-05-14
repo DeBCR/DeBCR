@@ -7,7 +7,7 @@ from ._core.data import (
     crop,
     stitch,
     normalize,
-    show_slices
+    show
 )
 
 def load(filepath: str) -> numpy.ndarray:
