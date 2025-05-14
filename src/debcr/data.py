@@ -10,10 +10,16 @@ from ._core.data import (
     show_slices
 )
 
-def load(input_filepath: str) -> numpy.ndarray:
+def load(filepath: str) -> numpy.ndarray:
     
-    input_fmt = _data.get_format(input_filepath)
+    input_fmt = _data.get_format(filepath)
     data_loader = _data.get_loader(input_fmt)
-    input_data = data_loader(input_filepath)
+    data = data_loader(filepath)
     
-    return input_data
+    return data
+
+def write(filepath: str, data):
+    
+    output_fmt = _data.get_format(filepath)
+    data_writer = _data.get_writer(output_fmt)
+    data_writer(filepath, data)
