@@ -26,6 +26,12 @@ def load_png_jpeg(file_path: str) -> np.ndarray:
     img_stack = skio.imread(file_path)
     return img_stack
 
+@register_loader("npy")
+def load_npy(file_path: str):
+    """Loads a single-array NPY file."""
+    sarr_data = np.load(file_path)
+    return sarr_data
+
 @register_loader("npz")
 def load_npz(file_path: str):
     """Loads a multi-array NPZ archive."""
@@ -40,7 +46,7 @@ def get_loader(file_format):
     return FORMAT_REGISTRY[file_format]
 
 def get_format(file_path: str) -> str:
-    """Returns the file format for the give file path."""
+    """Returns the file format for the given file path."""
     _,file_format = os.path.splitext(file_path)
     return file_format[1:] # truncate preceding dot
 
