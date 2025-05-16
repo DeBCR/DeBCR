@@ -7,21 +7,24 @@ from .utils import multi_input
 from .utils import setup_ckpt_manager
 from .loss import loss_function_mimo
 from .metrics import metrics_func_mimo
+from .batchloader import BatchLoader
 #from .show_utils import subShow3
 
-def train_model(model, train_img_datagen, val_img_datagen, train_config): #config.training
+def train_model(model, train_data, val_data, config):
+    
+    train_batchloader = BatchLoader(train_data, config['batch_size'])
+    val_batchloader = BatchLoader(val_data, config['batch_size'])
     
     best_val_loss = float('inf')
     wait = 0
     
-    checkpoint, checkpoint_manager = setup_ckpt_manager(model, train_config['ckpt_path']) # setup checkpoint manager
-    
-    optimizer = tf.keras.optimizers.Adam(learning_rate=train_config['lr'])
+    checkpoint, checkpoint_manager = setup_ckpt_manager(model, config['weights_path'])
+    optimizer = tf.keras.optimizers.Adam(learning_rate=config['learning_rate'])
     
     start_time = time.time()
 
-    for step in range(train_config['NUM_STEPS']):
-        w_train, o_train = train_img_datagen.__next__()
+    for step in range(config['NUM_STEPS']):
+        w_train, o_train = train_batchloader.__next__()
         w_train_list, o_train_list = multi_input(w_train), multi_input(o_train)
 
         with tf.GradientTape() as tape:
@@ -38,13 +41,13 @@ def train_model(model, train_img_datagen, val_img_datagen, train_config): #confi
         # Update the model's weights
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-        if step % train_config['save_freq'] == 0:
+        if step % config['save_freq'] == 0:
             print(step, loss, metric)
             # Save the model weights using the Checkpoint
             checkpoint_manager.save()
 
-        if step % train_config['val_freq'] == 0:
-            w_eval, o_eval = val_img_datagen.__next__()
+        if step % config['val_freq'] == 0:
+            w_eval, o_eval = val_batchloader.__next__()
             w_eval_list, o_eval_list = multi_input(w_eval), multi_input(o_eval)
             val_predictions = model(w_eval_list)
 
@@ -61,12 +64,12 @@ def train_model(model, train_img_datagen, val_img_datagen, train_config): #confi
             else:
                 wait += 1
 
-            #if train_config['visual']:
+            #if config['visual']:
             #    s_NUM = random.randint(0, predictions[0].shape[0] - 1)
             #    print('Objects:', s_NUM)
             #    subShow3(w_train[s_NUM], predictions[0][s_NUM], o_train[s_NUM])
             
-            if wait >= train_config['patience']:
+            if wait >= config['patience']:
                 print("Early stopping due to no improvement in validation loss.", step)
                 # Save the early stopping model weights using the Checkpoint
                 checkpoint_manager.save()

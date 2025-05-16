@@ -1,22 +1,25 @@
-import os
-import numpy as np
-from ._core import data
+from __future__ import annotations
 
-#def _prepare_numpy(data_raw: np.ndarray, patch_size=128) -> np.ndarray:
-def prepare(input_data: np.ndarray, patch_size: int = 128) -> np.ndarray:   
-    data_patch = data.patchify(input_data, patch_size=patch_size)
-    data_resc = data.rescale_min_max(data_patch)
+from ._core import data as _data
 
-    return data_resc
+# expose internal functions as API
+from ._core.data import (
+    crop,
+    stitch,
+    normalize,
+    show
+)
 
-## for future extension
-#def prepare(input_data: np.ndarray, patch_size: int = 128) -> np.ndarray:
-#    return _prepare_numpy(input_data, patch_size)
-
-def load(input_filepath: str) -> np.ndarray:
+def load(filepath: str) -> numpy.ndarray:
     
-    input_fmt = data.get_format(input_filepath)
-    data_loader = data.get_loader(input_fmt)
-    input_data = data_loader(input_filepath)
+    input_fmt = _data.get_format(filepath)
+    data_loader = _data.get_loader(input_fmt)
+    data = data_loader(filepath)
     
-    return input_data
+    return data
+
+def write(filepath: str, data):
+    
+    output_fmt = _data.get_format(filepath)
+    data_writer = _data.get_writer(output_fmt)
+    data_writer(filepath, data)

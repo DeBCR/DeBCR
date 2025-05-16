@@ -1,154 +1,137 @@
 # DeBCR
-### Deblurring (denoising/deconvolution) light microscopy images using a multi-resolution neural network
+### Deblurring of light microscopy images using a multi-resolution neural network
 
-**DeBCR** is a compact multi-resolution deep learning model for light microscopy image restorations (deblurring: denoising and deconvolution).
+**DeBCR** is a compact multi-resolution deep learning model for light microscopy image restorations (such as denoising and deconvolution).
 
 This is an open-source project and is licensed under [MIT license](LICENSE).
 
-You can use **DeBCR** as:
-- python library `debcr` via interactive `Jupyter Notebook/Lab` sessions (see below)
-- [napari](https://github.com/napari/napari) plugin [`napari-debcr`](https://github.com/DeBCR/napari-debcr/)
+You can use **DeBCR** via:
+- `Jupyter Notebook/Lab` session as a Python library `debcr` - proceed with reading this repository;
+- [Napari viewer](https://github.com/napari/napari) as an add-on plugin `napari-debcr` - proceed with the [napari-debcr repository](https://github.com/DeBCR/napari-debcr/).
 
-For the installation/usage questions please write to the [Issue Tracker](https://github.com/leeroyhannover/DeBCR/issues).
+For any installation/usage questions please write to the [Issue Tracker](https://github.com/DeBCR/DeBCR/issues).
 
 ## Contents
 
-- [About](#about) - key points of the network structure and results examples
-- [Installation](#installation) - instructions on `debcr` installation for local usage
-- [Usage](#usage) - local usage scenarious and respective tutorials 
-- [Samples](#samples) - link to example data and model weigths
-
-## About
-
-**DeBCR** is implemented based on the original Beylkin-Coifman-Rokhlin (BCR) model, implemented within DNN structure:
-![DeBCR network structure](docs/images/DeBCR_structure.jpg)
-
-In contrast to the traditional single-stage residual BCR learning process, DeBCR integrates feature maps from multiple resolution levels:
-![DeBCR multi-resolution](docs/images/DeBCR_multires.jpg)
-
-The example of the **DeBCR** performance on the low/high exposure confocal data (*Tribolium castaneum* from [CARE](https://www.nature.com/articles/s41592-018-0216-7)) is shown below:
-![DeBCR LM](docs/images/DeBCR_LM.jpg)
-
-<!--
-For more details on implementaion and benchmarks please see our recent preprint:
-Li R., Yushkevich A., Chu X., Kudryashev M., Yakimovich A. Denoising, Deblurring, and optical Deconvolution for cryo-ET and light microscopy with a physics-informed deep neural network DeBCR. *bioRxiv*, 2024.
--->
+- [Installation](#installation) - installation options, dependencies and instructions
+- [Usage](#usage) - usage scenarious and respective tutorials
+- [Samples](#samples) - link to the example data and respective trained model weigths
+- [About](#about) - key points of the network structure and results demo
 
 ## Installation
 
-`debcr` has two main versions:
-- [GPU version](#gpu-installation) (**recommended**) - more dependencies, full version (predictions+training);
-- [CPU version](#cpu-installation) (*lightweight*) - easy install, limited scope (predictions only).
+There are two installation versions for `DeBCR`:
+- a GPU version (**recommended**) -  allows full `DeBCR` functionality, including fast model training;
+- a CPU version (*limited*) - suitable only if you do not plan to use training, since doing it on CPUs might be very slow.
 
-To install `debcr` and its CPU/GPU dependencies you would need [pip](https://pypi.org/project/pip/).
+For a GPU version you need to have access to a GPU device with:
+- preferrably at least 16Gb of VRAM;
+- a CUDA Toolkit version compatible to your device (recommemded: [CUDA-11.7](https://developer.nvidia.com/cuda-11-7-0-download-archive));
+- a cuDNN version compatible to the CUDA above (recommemded: v8.4.0 for CUDA-11.x from [cuDNN archive](https://developer.nvidia.com/rdp/cudnn-archive)).
 
-For GPU dependencies you would also need a python package environment manager, like `(micro)mamba` ([mamba.readthedocs.io](https://mamba.readthedocs.io/)) or `conda-forge` ([conda-forge.org](https://conda-forge.org/)). We will use `micromamba` as an example.
+For GPU dependencies installation/configuration please check our tips on [GPU-advice page](docs/GPU-advice.md). 
 
-Although not required, a package manager to create environment is also recommended for the CPU version.
+> **Note**
+> <br/> A proper CUDA and cuDNN installation and configuration might be tricky, especially if you work on an HPC cluster. Thus, try to contact your local system administrator first, before trying to install it yourself. 
 
-To avoid dependency problems, do not install both CPU and GPU versions in the same environment!
+### Create a package environment (optional)
 
-### CPU installation
+For a clean installation, we also recommend using one of Python package environment managers, for example:
+- `micromamba`/`mamba` (see [mamba.readthedocs.io](https://mamba.readthedocs.io/)), used as example below
+- `conda-forge` (see [conda-forge.org](https://conda-forge.org/))
 
-0. (optional) Create and activate package environment:
-   ```bash
-   micromamba env create -n debcr-cpu -c conda-forge python=3.9 pip
-   micromamba activate debcr-cpu
-   ```
-1. Install CPU version of `debcr` package via pip by
-    ```bash
-    pip install debcr[tf-cpu]@git+https://github.com/DeBCR/DeBCR
-    ```
-
-### GPU installation
-
-To install/use GPU version you need to have a GPU (>=16GB VRAM) with `CUDA` installed.
-
-0. Create and activate package environment:
-   ```bash
-   micromamba env create -n debcr-gpu -c conda-forge python=3.9 pip
-   micromamba activate debcr-gpu
-   ```
-1. Install conda-like CUDA dependencies:
-    ```bash
-    micromamba install -c conda-forge cudatoolkit=11.7 cudnn=8.4
-    ```
-2. Install GPU version of `debcr` package via pip by
-    ```bash
-    pip install debcr[tf-gpu-cu117]@git+https://github.com/DeBCR/DeBCR
-    ```
-
-### GPU check and troubleshooting
-
-After installation we recommend to check that TensorFlow library, needed for our model, recognizes GPUs:
+We will use `micromamba` as an example package manager. Create an environment for `DeBCR` using
 ```bash
-python
->>> import tensorflow as tf
->>> tf.config.list_physical_devices('GPU')
+micromamba env create -n debcr python=3.9
 ```
-for a single GPU you should see something like:
+and activate it for further installation or usage by
+```bash
+micromamba activate debcr
+```
+
+### Install DeBCR
+
+Clone this repository to the desired directory by
+```bash
+cd /path/for/clone
+git clone https://github.com/DeBCR/DeBCR
+```
+
+Next, enter the cloned `DeBCR` directory by
+```bash
+cd ./DeBCR
+```
+and install one of the `DeBCR` versions as
+
+| Target hardware  | Backend         | Command  |
+| :--------------- | :-------------- | :------- | 
+| GPU (**recommended**) | TensorFlow-GPU-2.11 | <pre> pip install -e .[tf-gpu] </pre> |
+| CPU (*limited*) | TensorFlow-CPU-2.11 | <pre> pip install -e .[tf-cpu] </pre> |
+
+For a GPU version installation, it is recommended to check if your GPU device is recognised by **TensorFlow** using
+```bash
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+which for a single GPU device should produce a similar output as below:
 ```
 [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
 ```
 
-If the GPU list is empty, it might be bacause `TensorFlow` cannot find `cudnn`. To fix that, please make the following export for the current bash session (or add it permanently to your `~/.bashrc`):
-```bash
-export LD_LIBRARY_PATH=/path/to/micromamba/envs/debcr-gpu/lib/python3.9/site-packages/nvidia/cudnn/lib/:${LD_LIBRARY_PATH}
-```
-with the actual location/name of your package manager and name of your environment for GPU version of `debcr` package. 
+If your GPU device list is empty, please check our tips on [GPU-advice page](docs/GPU-advice.md).
 
-If after that the output list is still empty, please make sure that you:
-* have available and visible GPU
-* installed and sourced **CUDA Driver** and **CUDA Tollkit** for `CUDA-11.5/7`
-* installed CUDA dependencies correctly (as described above)
-* activated correct package environemnt for `debcr` 
-* exported to `LD_LIBRARY_PATH` correct path to cudnn libraries from your GPU-version `debcr` environment (see instructions above)
-
-### Jupyter for interactive API usage
+### Install Jupyter
 
 Finally, to use `debcr` as a python library (API) interactively as either CPU version (for prediction only) or as a GPU version (for both traininig and prediction) you need to install a [Jupyter Notebook/Lab](https://jupyter.org/install).
 
-For example, install Jupyter Lab to your `debcr` environment by:
+For example, install Jupyter Lab to your `debcr` environment by
 ```bash
 pip install jupyterlab
 ```
 
 ## Usage
 
-To showcase how to use `debcr` as a python library (API) interactively in `Jupyter Notebook/Lab`, we prepared several usage examples:
-   | Notebook                                                          | Purpose | Requires |
-   | :---------------------------------------------------------------- | :------ | :------- | 
-   | [predict_api_samples.ipynb](notebooks/predict_api_samples.ipynb)  | predict on prepared data | CPU/GPU, [sample data](#samples) |
-   | [predict_api_custom.ipynb](notebooks/predict_api_custom.ipynb)    | prepare raw data and predict | CPU/GPU |
+To showcase how to use `debcr` as a python library (API) interactively in `Jupyter Notebook/Lab`, we prepared several usage examples (available in the cloned repository at `DeBCR/notebooks`):
+   | Notebook                                                          | Purpose | Hardware | Inputs |
+   | :---------------------------------------------------------------- | :------ | :------- | :------- | 
+   | [debcr_predict.ipynb](notebooks/debcr_predict.ipynb)  | deblurred prediction | CPU/GPU | pre-processed input data (NPZ/NPY), </br> trained DeBCR model. |
+   | [debcr_train.ipynb](notebooks/debcr_train.ipynb)    | model training | GPU | training/validation data (NPZ/NPY). |
+   | [debcr_preproc.ipynb](notebooks/debcr_preproc.ipynb)      | raw data pre-processing | CPU | raw data (TIF(F), JP(E)G, PNG). |
 
-You can either download them separately, for example:
+To use notebooks, activate the respective environment (if any) and start Jupyter session in the directory with notebook
 ```bash
-wget https://github.com/DeBCR/DeBCR/raw/refs/heads/main/notebooks/predict_api_samples.ipynb
-```
-or you may clone the whole **DeBCR** repository locally by:
-```bash
-git clone https://github.com/DeBCR/DeBCR
-```
-
-To use notebooks, activate the respective `debcr` environment, e.g.:
-```bash
-micromamba activate debcr-gpu
-```
-and start jupyter session in the directory with the notebook, e.g.:
-```bash
+micromamba activate debcr
 jupyter-lab
 ```
 
-Some of the notebooks require:
+The tutorial notebooks use ["samples"](#samples):
 - *sample data* - examples of pre-processed training/validation/testing data;
-- *sample weights* - examples of the trained model weights, respective to *sample data*;
-
-which are described in the next section.
+- *sample weights* - examples of the trained model weights, respective to *sample data*.
 
 ## Samples
 
-To evaluate **DeBCR** on various image restoration tasks, several previously published datasets were assembled, pre-processed and publicly deposited as NumPy (.npz) arrays in three essential sets (train, validation and test). The corresponding weights for DeBCR model, trained on respective train subsets, are provided along with the data. 
+To evaluate **DeBCR** on various image restoration tasks, several previously published datasets were assembled, pre-processed and publicly deposited as NumPy (.npz) arrays in three essential sets (train, validation and test). The corresponding weights for DeBCR model, trained on respective train subsets, are provided along with the data.
 
 The datasets aim at the image restoration tasks such as denoising and super-resolution deconvolution.
 
 Access data and weights on Zenodo: [10.5281/zenodo.12626121](https://zenodo.org/doi/10.5281/zenodo.12626121).
+
+## About
+
+**DeBCR** approximates imaging process inversion with deep convolutional neural network (DCNN), based on compact BCR-representation ([Beylkin G. et al., *Comm. Pure Appl. Math*, 1991](https://onlinelibrary.wiley.com/doi/10.1002/cpa.3160440202)) for convolutions and its DCNN implementation as proposed in BCR-Net ([Fan Y. et al., *J. Comput. Phys.*, 2019](https://www.sciencedirect.com/science/article/pii/S0021999119300762)):
+![DeBCR network structure](docs/images/DeBCR_structure.jpg)
+
+In contrast to the traditional single-stage residual BCR learning process, DeBCR integrates feature maps from multiple resolution levels:
+![DeBCR multi-resolution](docs/images/DeBCR_multires.jpg)
+
+The example of the **DeBCR** performance on the low/high exposure confocal data of *Tribolium castaneum* sample from the **CARE** work ([Weigert et al., *Nat. Methods*, 2018](https://www.nature.com/articles/s41592-018-0216-7)) is shown below:
+![DeBCR LM](docs/images/DeBCR_LM.jpg)
+
+For more details on the multi-stage residual BCR (m-rBCR) architechture used in DeBCR toolkit see:
+
+Li, R., Kudryashev, M., Yakimovich, A. Solving the Inverse Problem of Microscopy Deconvolution with a Residual Beylkin-Coifman-Rokhlin Neural Network. *ECCV 2024*, *Lecture Notes in Computer Science*, vol 15133. Springer, Cham. https://doi.org/10.1007/978-3-031-73226-3_22
+
+<!--
+For more details on implementaion and benchmarks please see our recent preprint:
+Li R., Yushkevich A., Chu X., Kudryashev M., Yakimovich A. Denoising, Deblurring, and optical Deconvolution for cryo-ET and light microscopy with a physics-informed deep neural network DeBCR. *bioRxiv*, 2024.
+-->
