@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 @dataclass
 class Config:
 
-    weights_path: str = './checkpoint/LM_2D_denoising/'
+    weights_path: str = './checkpoint/'
     batch_size: int = 32
     NUM_STEPS: int = 2000
     patience: int = 10
