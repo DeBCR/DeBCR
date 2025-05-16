@@ -92,11 +92,11 @@ pip install jupyterlab
 ## Usage
 
 To showcase how to use `debcr` as a python library (API) interactively in `Jupyter Notebook/Lab`, we prepared several usage examples (available in the cloned repository at `DeBCR/notebooks`):
-   | Notebook                                                          | Purpose | Hardware | Data |
+   | Notebook                                                          | Purpose | Hardware | Inputs |
    | :---------------------------------------------------------------- | :------ | :------- | :------- | 
-   | [predict_api_samples.ipynb](notebooks/predict_api_samples.ipynb)  | prediction | CPU/GPU | pre-processed: NPZ |
-   | [predict_api_custom.ipynb](notebooks/predict_api_custom.ipynb)    | pre-processing </br> prediction | CPU/GPU | raw: TIF(F), JP(E)G, etc. |
-   | [train_api_samples.ipynb](notebooks/train_api_samples.ipynb)      | training | GPU | pre-processed: NPZ |
+   | [debcr_predict.ipynb](notebooks/debcr_predict.ipynb)  | deblurred prediction | CPU/GPU | pre-processed input data (NPZ/NPY), </br> trained DeBCR model. |
+   | [debcr_train.ipynb](notebooks/debcr_train.ipynb)    | model training | GPU | training/validation data (NPZ/NPY). |
+   | [debcr_preproc.ipynb](notebooks/debcr_preproc.ipynb)      | raw data pre-processing | CPU | raw data (TIF(F), JP(E)G, PNG). |
 
 To use notebooks, activate the respective environment (if any) and start Jupyter session in the directory with notebook
 ```bash
@@ -104,7 +104,7 @@ micromamba activate debcr
 jupyter-lab
 ```
 
-Some of notebooks use ["samples"](#samples):
+The tutorial notebooks use ["samples"](#samples):
 - *sample data* - examples of pre-processed training/validation/testing data;
 - *sample weights* - examples of the trained model weights, respective to *sample data*.
 
@@ -126,6 +126,10 @@ In contrast to the traditional single-stage residual BCR learning process, DeBCR
 
 The example of the **DeBCR** performance on the low/high exposure confocal data of *Tribolium castaneum* sample from the **CARE** work ([Weigert et al., *Nat. Methods*, 2018](https://www.nature.com/articles/s41592-018-0216-7)) is shown below:
 ![DeBCR LM](docs/images/DeBCR_LM.jpg)
+
+For more details on the multi-stage residual BCR (m-rBCR) architechture used in DeBCR toolkit see:
+
+Li, R., Kudryashev, M., Yakimovich, A. Solving the Inverse Problem of Microscopy Deconvolution with a Residual Beylkin-Coifman-Rokhlin Neural Network. *ECCV 2024*, *Lecture Notes in Computer Science*, vol 15133. Springer, Cham. https://doi.org/10.1007/978-3-031-73226-3_22
 
 <!--
 For more details on implementaion and benchmarks please see our recent preprint:
