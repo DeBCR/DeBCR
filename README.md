@@ -9,7 +9,7 @@ You can use **DeBCR** via:
 - `Jupyter Notebook/Lab` session as a Python library `debcr` - proceed with reading this repository;
 - [Napari viewer](https://github.com/napari/napari) as an add-on plugin `napari-debcr` - proceed with the [napari-debcr repository](https://github.com/DeBCR/napari-debcr/).
 
-For any installation/usage questions please write to the [Issue Tracker](https://github.com/leeroyhannover/DeBCR/issues).
+For any installation/usage questions please write to the [Issue Tracker](https://github.com/DeBCR/DeBCR/issues).
 
 ## Contents
 
