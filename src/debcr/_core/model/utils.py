@@ -3,7 +3,24 @@ import glob
 import numpy as np
 import tensorflow as tf
 
+_gpu_configured = False
+
+def _configure_gpu():
+    global _gpu_configured
+    if _gpu_configured:
+        return
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            _gpu_configured = True
+        except RuntimeError as e:
+            print(f"DeBCR GPU config error: {e}")
+
 def build_and_compile(input_shape = (128, 128, 1)):
+    _configure_gpu()
+    
     from .m_rBCR import m_rBCR
     from .loss import loss_function_mimo
     from .metrics import metrics_func_mimo
