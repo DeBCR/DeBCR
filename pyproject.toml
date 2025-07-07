@@ -1,6 +1,8 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+#requires = ["setuptools", "wheel"]
+#build-backend = "setuptools.build_meta"
 
 [project]
 name = "debcr"
@@ -8,7 +10,7 @@ dynamic = ["version"]
 description = "Deep learning based denoising/deblurring/deconvolution for light microscopy data."
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.12"
 keywords = [
     "image processing", "deep learning",
     "BCR", "waveletes", "BCR-Net", "m-rBCR", "s-rBCR",
@@ -55,6 +57,9 @@ tf-gpu = [ "tensorflow-gpu==2.11" ]
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
+
+[tool.poetry]
+version = "0.1.0"  # version placeholder, see debcr.__init__.__version__
 
 [tool.setuptools.dynamic]
 version = {attr = "debcr.__init__.__version__"}
