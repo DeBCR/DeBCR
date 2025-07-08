@@ -6,17 +6,18 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "debcr"
-dynamic = ["version"]
-description = "Deep learning based denoising/deblurring/deconvolution for light microscopy data."
+version = "0.1.0"
+#dynamic = ["version"]
+description = "Image enhancement framework for light microscopy data using deep learning."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9,<3.12"
 keywords = [
-    "image processing", "deep learning",
-    "BCR", "waveletes", "BCR-Net", "m-rBCR", "s-rBCR",
+    "image processing", "image restoration", "image enhancement", "deep learning",
+    "BCR", "BCR-Net", "m-rBCR",
     "denoising", "deblurring", "deconvolution",
     "confocal microscopy", "widefield microscopy",
-    "fluorescent microscopy", "light microscopy"
+    "fluorescence microscopy", "light microscopy"
 ]
 authors = [
 { name="Artsemi Yushkevich" },
@@ -55,11 +56,13 @@ dev = [
 tf-cpu = [ "tensorflow-cpu==2.11" ]
 tf-gpu = [ "tensorflow-gpu==2.11" ]
 
-[tool.setuptools]
-packages = { find = { where = ["src"] } }
-
 [tool.poetry]
-version = "0.1.0"  # version placeholder, see debcr.__init__.__version__
+packages = [
+    { include = "debcr", from = "src" },
+]
 
-[tool.setuptools.dynamic]
-version = {attr = "debcr.__init__.__version__"}
+#[tool.setuptools]
+#packages = { find = { where = ["src"] } }
+
+#[tool.setuptools.dynamic]
+#version = {attr = "debcr.__init__.__version__"}
