@@ -8,6 +8,19 @@ As a framework, **DeBCR** provides user interfaces such as:
 - [`debcr`](https://github.com/DeBCR/DeBCR) - a Python-based API library for scripting, e.g. using [Jupyter Notebook/Lab](https://jupyter.org/)
 - [`napari-debcr`](https://github.com/DeBCR/napari-debcr/) - an add-on GUI plugin for [Napari viewer](https://github.com/napari/napari)
 
+### How to cite us
+_Li, R., Yushkevich, A., Chu, X., Kudryashev, M. and Yakimovich, A., 2026. DeBCR: a sparsity-efficient framework for image enhancement through a deep-learning-based solution to inverse problems. Communications Engineering._
+
+```
+@article{li2026debcr,
+  title={DeBCR: a sparsity-efficient framework for image enhancement through a deep-learning-based solution to inverse problems},
+  author={Li, Rui and Yushkevich, Artsemi and Chu, Xiaofeng and Kudryashev, Mikhail and Yakimovich, Artur},
+  journal={Communications Engineering},
+  year={2026},
+  publisher={Nature Publishing Group UK London}
+}
+```
+
 ### License
 This is an open-source project and is licensed under [MIT license](https://github.com/DeBCR/DeBCR/blob/main/LICENSE).
 
